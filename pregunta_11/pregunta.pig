@@ -33,3 +33,7 @@ $ pig -x local -f pregunta.pig
         >>> Escriba su respuesta a partir de este punto <<<
 */
 
+l= LOAD 'data.tsv' USING PigStorage (',') AS (col1: chararray, col2: chararray, col3: chararray, col4: chararray, col5: chararray, col6: Int);
+relation= FOREACH l GENERATE col3, UPPER(col3), LOWER(col3);
+sorted_relation= ORDER l BY col3;
+STORE sorted_relation INTO 'output' USING PigStorage(',');
