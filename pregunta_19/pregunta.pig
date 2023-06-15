@@ -22,4 +22,7 @@ $ pig -x local -f pregunta.pig
         /* >>> Escriba su respuesta a partir de este punto <<< */
 
 */
-
+l= LOAD 'data.tsv' USING PigStorage (',') AS (col1: int, col2: chararray, col3: chararray, col4: chararray, col5: chararray, col6: Int);
+filtered_data = FILTER l BY SUBSTRING(color, 0, 1) == 'b';
+result = FOREACH filtered_data GENERATE firstname, color;
+STORE result INTO 'output' USING PigStorage(',');
