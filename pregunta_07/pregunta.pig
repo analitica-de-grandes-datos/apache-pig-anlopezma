@@ -14,3 +14,9 @@ $ pig -x local -f pregunta.pig
 
         >>> Escriba su respuesta a partir de este punto <<<
 */
+l= LOAD 'data.tsv' USING PigStorage ('\t')
+     AS (letra: chararray, tupla:bag{}, lista:map[];
+         
+table = FOREACH l GENERATE LETRA, SIZE(tupla) as cant1, SIZE(lista) as cant2;
+sorted_table = ORDER table BY letra, cant1, cant2;
+STORE sorted_table INTO 'output' USING PigStorage(',');
