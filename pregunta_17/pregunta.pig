@@ -22,4 +22,4 @@ $ pig -x local -f pregunta.pig
 l= LOAD 'data.tsv' USING PigStorage (',') AS (col1: int, col2: chararray, col3: chararray, col4: chararray, col5: chararray, col6: Int);
 result = FOREACH l GENERATE col2, col5;
 result = FILTER result BY (col5 MATCHES '.*(blue | black)');
-STORE datos INTO 'output' USING PigStorage(',');
+STORE result INTO 'output' USING PigStorage(',');
