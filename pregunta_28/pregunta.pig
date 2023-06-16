@@ -23,3 +23,7 @@ $ pig -x local -f pregunta.pig
         >>> Escriba su respuesta a partir de este punto <<<
 */
 
+l= LOAD 'data.tsv' USING PigStorage (',') AS (col1: Int, col2: chararray, col3: chararray, col4: chararray, col5: chararray, col6: Int);
+
+result = FOREACH l GENERATE CONCAT(SUBSTRING(col4,0,4), ',', SUBSTRING(col4,2,4));
+STORE result INTO 'output' USING PigStorage(',');
