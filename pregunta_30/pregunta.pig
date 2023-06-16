@@ -33,4 +33,30 @@ $ pig -x local -f pregunta.pig
 
         >>> Escriba su respuesta a partir de este punto <<<
 */
+l= LOAD 'data.tsv' USING PigStorage (',') AS (col1: Int, col2: chararray, col3: chararray, col4: chararray, col5: chararray, col6: Int);
 
+result = FOREACH l GENERATE col4, LOWER(ToString(ToDate(col4, 'yyyy-MM-dd'), 'EEE')) AS dia_corto, LOWER(ToString(ToDate(col4, 'yyyy-MM-dd'), 'EEEE')) AS dia_largo;
+
+dias = FOREACH result GENERATE col4,ToString(ToDate(col4, 'yyyy-MM-dd'), 'dd'),ToString(ToDate(col4, 'yyyy-MM-dd'), 'd'),
+                                 (CASE dia_corto
+                                        WHEN 'mon' THEN 'lun'
+                                        WHEN 'tue' THEN 'mar'
+                                        WHEN 'wed' THEN 'mie'
+                                        WHEN 'thu' THEN 'jue'
+                                        WHEN 'fri' THEN 'vie'
+                                        WHEN 'sat' THEN 'sab'
+                                        WHEN 'sun' THEN 'dom'
+                                        ELSE dia_corto
+                                END),
+                                 (CASE dia_largo
+                                        WHEN 'monday' THEN 'lunes'
+                                        WHEN 'tuesday' THEN 'martes'
+                                        WHEN 'wednesday' THEN 'miercoles'
+                                        WHEN 'thursday' THEN 'jueves'
+                                        WHEN 'friday' THEN 'viernes'
+                                        WHEN 'saturday' THEN 'sabado'
+                                        WHEN 'sunday' THEN 'domingo'
+                                        ELSE dia_largo
+                                END);
+
+STORE dias INTO 'output' USING PigStorage(',');
