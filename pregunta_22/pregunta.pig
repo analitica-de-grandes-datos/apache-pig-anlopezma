@@ -26,4 +26,4 @@ l= LOAD 'data.tsv' USING PigStorage (',') AS (col1: Int, col2: chararray, col3: 
 
 result= FOREACH l GENERATE col2, col5;
 result= FILTER datos BY col5 MATCHES '.n';
-STORE datos INTO 'output' USING PigStorage(',');
+STORE result INTO 'output' USING PigStorage(',');
