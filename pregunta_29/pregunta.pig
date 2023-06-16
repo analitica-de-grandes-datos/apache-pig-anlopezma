@@ -33,4 +33,27 @@ $ pig -x local -f pregunta.pig
 
         >>> Escriba su respuesta a partir de este punto <<<
 */
+l= LOAD 'data.tsv' USING PigStorage (',') AS (col1: Int, col2: chararray, col3: chararray, col4: chararray, col5: chararray, col6: Int);
 
+result_mes = FOREACH l GENERATE col4, LOWER(ToString(ToDate(col4, 'yyyy-MM-dd'), 'MMM')) AS mes;
+
+result_mes = FOREACH result_mes GENERATE col4,
+                     (CASE mes
+                        WHEN 'jan' THEN 'ene'
+                        WHEN 'feb' THEN 'feb'
+                        WHEN 'mar' THEN 'mar'
+                        WHEN 'apr' THEN 'abr'
+                        WHEN 'may' THEN 'may'
+                        WHEN 'jun' THEN 'jun'
+                        WHEN 'jul' THEN 'jul'
+                        WHEN 'aug' THEN 'ago'
+                        WHEN 'sep' THEN 'sep'
+                        WHEN 'oct' THEN 'oct'
+                        WHEN 'nov' THEN 'nov'
+                        WHEN 'dec' THEN 'dic'
+                        ELSE mes
+                     END),
+                     ToString(ToDate(col4, 'yyyy-MM-dd'), 'MM'),
+                     ToString(ToDate(col4, 'yyyy-MM-dd'), 'M');
+
+STORE result_mes INTO 'output' USING PigStorage(',');
